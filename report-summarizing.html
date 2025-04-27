@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Report Summarizer | HealthVision</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- PDF.js library for PDF text extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+  <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';</script>
+  <!-- Tesseract.js for OCR from images -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+  
+  <style>
+    /* All original CSS remains exactly the same */
+    :root {
+      --primary-color: #4caf50;
+      --primary-dark: #388e3c;
+      --primary-light: #81c784;
+      --secondary-color: #2196f3;
+      --accent-color: #ff9800;
+      --text-primary: white;
+      --text-secondary:white;
+      --bg-light: #f5f7fa;
+      --bg-dark: #e7eef9;
+      --card-bg: #ffffff;
+      --nav-bg: rgba(26, 32, 44, 0.9);
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #81c784;
+      --primary-dark: #4caf50;
+      --primary-light: #388e3c;
+      --secondary-color: #64b5f6;
+      --accent-color: #ffb74d;
+      --text-primary: #f5f5f5;
+      --text-secondary: #b0bec5;
+      --bg-light: #121212;
+      --bg-dark:black;
+      --card-bg: #1e1e1e;
+      --nav-bg: black;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    a{
+      text-decoration:none;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-primary);
+      line-height: 1.6;
+      transition: var(--transition);
+    }
+
+    body[data-theme="dark"] {
+      background-color: var(--bg-dark);
+    }
+
+    .container {
+      max-width: 1840px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Navigation - Same as main page */
+    .nav-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      padding: 1rem 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo a {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo i {
+      font-size: 1.8rem;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-primary);
+      font-weight: 500;
+      position: relative;
+      padding: 0.5rem 0;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .language-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem; /* Makes the globe bigger */
+  color: inherit; /* Uses current text color (for dark/light theme) */
+  padding: 0.5rem;
+  display: flex;
+  align-items:end;
+  justify-content: center;
+}
+.language-toggle-btn:focus {
+  outline: none;
+}
+
+.language-dropdown {
+  position: absolute;
+  right: 0;
+  background: black;
+  border: 2px solid #f5f5f5;
+  border-radius: 10%;
+  list-style: none;
+  padding: 5px 0;
+  margin: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.language-dropdown li {
+  color: white;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.language-dropdown li:hover {
+  background-color: #0e0c0cb7;
+}
+.language-wrapper {
+  position: relative;
+}
+.hidden {
+  display: none;
+}
+
+.language-dropdown li:hover {
+  background-color: #b0acacb7;
+}
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+
+    /* Report Summarizer Specific Styles */
+    .report-summarizer {
+      padding: 6rem 0 3rem;
+      min-height: calc(100vh - 80px);
+    }
+
+    .summarizer-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .summarizer-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+
+    .summarizer-header p {
+      color: darkgray;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .summarizer-container {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .upload-section {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .upload-instructions {
+      margin-bottom: 1.5rem;
+      color: darkgray;
+    }
+
+    .upload-box {
+      border: 2px dashed var(--primary-light);
+      border-radius: 8px;
+      padding: 2rem;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 1.5rem;
+    }
+
+    .upload-box:hover {
+      border-color: var(--primary-color);
+      background-color: rgba(76, 175, 80, 0.05);
+    }
+
+    .upload-icon {
+      font-size: 3rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    .upload-text {
+        color:darkgray;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .upload-subtext {
+      color: darkgray;
+      font-size: 0.9rem;
+    }
+
+    #reportInput {
+      display: none;
+    }
+
+    .upload-status {
+      margin-top: 1rem;
+      font-weight: 500;
+      color: darkgray;
+    }
+
+    .analyze-btn {
+      display: none;
+      width: 100%;
+      padding: 1rem;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 1.5rem;
+    }
+
+    .analyze-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .loading-spinner {
+      border: 4px solid rgba(76, 175, 80, 0.3);
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    .results-section {
+      display: none;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(76, 175, 80, 0.3);
+    }
+
+    .results-header {
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .results-header h2 {
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .report-output {
+      background-color: rgba(76, 175, 80, 0.1);
+      border-radius: 8px;
+      padding: 1.5rem;
+      border-left: 4px solid var(--primary-color);
+      margin-bottom: 1.5rem;
+    }
+
+    .report-output h3 {
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .report-output p {
+      color: #5489a3;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+
+    .actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+    }
+
+    .doctor-btn {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+
+    .doctor-btn:hover {
+      background-color: #1976d2;
+    }
+
+    .hospital-btn {
+      background-color: var(--accent-color);
+      color: white;
+    }
+
+    .hospital-btn:hover {
+      background-color: #f57c00;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Footer - Same as main page */
+    .footer {
+      background-color: var(--nav-bg);
+      color: var(--text-primary);
+      padding: 3rem 0 1.5rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    .footer-about p {
+      margin-bottom: 1.5rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .social-links a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      color:black;
+      background-color: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .social-links a:hover {
+      background-color: var(--primary-color);
+      transform: translateY(-3px);
+    }
+
+    .footer-links h3 {
+      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+
+    .footer-links h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background-color: var(--primary-color);
+    }
+
+    .footer-links ul {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--primary-color);
+      padding-left: 5px;
+    }
+
+    .footer-contact p {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .nav-links {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        right: 0;
+        background-color: var(--nav-bg);
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 0;
+        gap: 1.5rem;
+        clip-path: circle(0px at 90% -10%);
+        transition: clip-path 0.5s ease;
+      }
+      
+      .nav-links.active {
+        clip-path: circle(150% at 90% -10%);
+      }
+      
+      .hamburger {
+        display: block;
+      }
+      
+      .summarizer-header h1 {
+        font-size: 2rem;
+      }
+      
+      .actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation - Same as main page -->
+  <header class="nav-container">
+    <nav class="navbar container">
+      <div class="logo">
+        <a href="index.html"><i class="fas fa-heartbeat"></i> HealthVision</a>
+      </div>
+      
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" data-translate="Home">Home</a></li>
+        <li><a href="index.html#about" data-translate="About Us">About Us</a></li>
+        <li><a href="index.html#features" data-translate="Features">Features</a></li>
+        <li><a href="index.html#how-it-works" data-translate="How It Works">How It Works</a></li>
+      </ul>
+      
+      <div class="nav-actions">
+        <div class="language-wrapper">
+          <button id="languageToggle" class="language-toggle-btn" title="Change Language">🌐</button>
+          <ul id="languageDropdown" class="language-dropdown hidden">
+              <li data-lang="en">English</li>
+              <li data-lang="hi">हिन्दी</li>
+          </ul>
+      </div>
+        
+        <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+          <i class="fas fa-moon"></i>
+        </button>
+        
+        <div class="hamburger" id="hamburger">
+          <i class="fas fa-bars"></i>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Report Summarizer Main Content -->
+  <main class="report-summarizer">
+    <div class="container">
+      <div class="summarizer-header">
+        <h1><i class="fas fa-notes-medical"></i> <span data-translate="Medical Report Summarizer">Medical Report Summarizer</span></h1>
+        <p data-translate="Upload your medical reports or lab results to get a clear, simplified explanation in plain language.">
+          Upload your medical reports or lab results to get a clear, simplified explanation in plain language.
+        </p>
+      </div>
+      
+      <div class="summarizer-container">
+        <div class="upload-section">
+          <p class="upload-instructions" data-translate="Upload your medical report (PDF or image) for AI-powered summarization">
+            Upload your medical report (PDF or image) for AI-powered summarization
+          </p>
+          
+          <div class="upload-box" id="uploadBox">
+            <div class="upload-icon">
+              <i class="fas fa-file-upload"></i>
+            </div>
+            <p class="upload-text" data-translate="Choose a PDF or image file">Choose a PDF or image file</p>
+            <p class="upload-subtext" data-translate="PDF, JPG, PNG">PDF, JPG, PNG</p>
+            <input type="file" id="reportInput" accept=".pdf,.jpg,.jpeg,.png,.webp">
+          </div>
+          
+          <p class="upload-status" id="uploadStatus" data-translate="No file selected">No file selected</p>
+          
+          <button class="analyze-btn" id="analyzeBtn" data-translate="Summarize Report">Summarize Report</button>
+        </div>
+        
+        <div class="loading" id="loadingIndicator">
+          <div class="loading-spinner"></div>
+          <p data-translate="Processing your report...">Processing your report...</p>
+        </div>
+        
+        <div class="results-section" id="summarySection">
+          <div class="results-header">
+            <h2 data-translate="Report Summary">Report Summary</h2>
+            <p data-translate="Simplified explanation of your medical report">Simplified explanation of your medical report</p>
+          </div>
+          
+          <div class="report-output">
+            <h3><i class="fas fa-file-medical-alt"></i> <span data-translate="Simplified Summary">Simplified Summary</span></h3>
+            <p id="simplifiedOutput" data-translate="Your report summary will appear here after analysis.">Your report summary will appear here after analysis.</p>
+          </div>
+          
+          <div class="actions">
+            <button class="action-btn hospital-btn" onclick="window.location.href='nearby-hospitals.html'">
+              <i class="fas fa-hospital"></i>
+              <span data-translate="Find Nearby Hospitals">Find Nearby Hospitals</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer - Same as main page -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <a href="#" class="footer-logo"><i class="fas fa-heartbeat"></i> HealthVision</a>
+          <p data-translate="Empowering individuals with AI-driven healthcare insights and connections to medical professionals worldwide.">
+            Empowering individuals with AI-driven healthcare insights and connections to medical professionals worldwide.
+          </p>
+        </div>
+        
+        <div class="footer-links">
+          <h3 data-translate="Quick Links">Quick Links</h3>
+          <ul>
+            <li><a href="index.html" data-translate="Home">Home</a></li>
+            <li><a href="index.html#about" data-translate="About Us">About Us</a></li>
+            <li><a href="index.html#features" data-translate="Features">Features</a></li>
+            <li><a href="index.html#how-it-works" data-translate="How It Works">How It Works</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-links">
+          <h3 data-translate="Features">Features</h3>
+          <ul>
+            <li><a href="symptom-checker.html" data-translate="Symptom Checker">Symptom Checker</a></li>
+            <li><a href="image-diagnosis.html" data-translate="Image Diagnosis">Image Diagnosis</a></li>
+            <li><a href="nearby-hospitals.html" data-translate="Hospital Finder">Hospital Finder</a></li>
+            <li><a href="report-summarizing.html" data-translate="Report Summarizer">Report Summarizer</a></li>
+            <li><a href="consultancy.html" data-translate="Doctor Consultations">Doctor Consultations</a></li>
+          </ul>
+        </div>
+      </div>
+  </footer>
+
+  <script>
+    // Language dictionary
+    const translations = {
+      'en': {
+        'Medical Report Summarizer': 'Medical Report Summarizer',
+        'Upload your medical reports or lab results to get a clear, simplified explanation in plain language.':
+          'Upload your medical reports or lab results to get a clear, simplified explanation in plain language.',
+        'Upload your medical report (PDF or image) for AI-powered summarization':
+          'Upload your medical report (PDF or image) for AI-powered summarization',
+        'Choose a PDF or image file': 'Choose a PDF or image file',
+        'PDF, JPG, PNG': 'PDF, JPG, PNG',
+        'No file selected': 'No file selected',
+        'Summarize Report': 'Summarize Report',
+        'Processing your report...': 'Processing your report...',
+        'Report Summary': 'Report Summary',
+        'Simplified explanation of your medical report': 'Simplified explanation of your medical report',
+        'Simplified Summary': 'Simplified Summary',
+        'Your report summary will appear here after analysis.': 'Your report summary will appear here after analysis.',
+        'Consult a Specialist': 'Consult a Specialist',
+        'Find Nearby Hospitals': 'Find Nearby Hospitals',
+        'Home': 'Home',
+        'About Us': 'About Us',
+        'Features': 'Features',
+        'How It Works': 'How It Works',
+        'Symptom Checker': 'Symptom Checker',
+        'Image Diagnosis': 'Image Diagnosis',
+        'Hospital Finder': 'Hospital Finder',
+        'Report Summarizer': 'Report Summarizer',
+        'Doctor Consultations': 'Doctor Consultations',
+        'Empowering individuals with AI-driven healthcare insights and connections to medical professionals worldwide.':
+          'Empowering individuals with AI-driven healthcare insights and connections to medical professionals worldwide.'
+      },
+      'hi': {
+        'Medical Report Summarizer': 'मेडिकल रिपोर्ट सारांशक',
+        'Upload your medical reports or lab results to get a clear, simplified explanation in plain language.':
+          'सरल भाषा में स्पष्ट व्याख्या प्राप्त करने के लिए अपनी चिकित्सा रिपोर्ट या लैब परिणाम अपलोड करें।',
+        'Upload your medical report (PDF or image) for AI-powered summarization':
+          'AI-संचालित सारांश के लिए अपनी चिकित्सा रिपोर्ट (PDF या छवि) अपलोड करें',
+        'Choose a PDF or image file': 'एक PDF या छवि फ़ाइल चुनें',
+        'PDF, JPG, PNG': 'PDF, JPG, PNG',
+        'No file selected': 'कोई फ़ाइल चयनित नहीं',
+        'Summarize Report': 'रिपोर्ट सारांशित करें',
+        'Processing your report...': 'आपकी रिपोर्ट प्रसंस्करण...',
+        'Report Summary': 'रिपोर्ट सारांश',
+        'Simplified explanation of your medical report': 'आपकी चिकित्सा रिपोर्ट की सरल व्याख्या',
+        'Simplified Summary': 'सरल सारांश',
+        'Your report summary will appear here after analysis.': 'विश्लेषण के बाद आपका रिपोर्ट सारांश यहां दिखाई देगा।',
+        'Consult a Specialist': 'विशेषज्ञ से परामर्श करें',
+        'Find Nearby Hospitals': 'निकटतम अस्पताल खोजें',
+        'Home': 'होम',
+        'About Us': 'हमारे बारे में',
+        'Features': 'विशेषताएं',
+        'How It Works': 'यह कैसे काम करता है',
+        'Symptom Checker': 'लक्षण जांचकर्ता',
+        'Image Diagnosis': 'छवि निदान',
+        'Hospital Finder': 'अस्पताल खोजक',
+        'Report Summarizer': 'रिपोर्ट सारांशक',
+        'Doctor Consultations': 'डॉक्टर परामर्श',
+        'Empowering individuals with AI-driven healthcare insights and connections to medical professionals worldwide.':
+          'विश्व भर में एआई-संचालित स्वास्थ्य सेवा अंतर्दृष्टि और चिकित्सा पेशेवरों से कनेक्शन के साथ व्यक्तियों को सशक्त बनाना।'
+      }
+    };
+    // Single changeLanguage function
+    function changeLanguage(lang) {
+      document.querySelectorAll('[data-translate]').forEach(element => {
+        const key = element.getAttribute('data-translate');
+        if (translations[lang] && translations[lang][key]) {
+          element.textContent = translations[lang][key];
+        }
+      });
+      
+      localStorage.setItem('language', lang);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Theme Toggle
+      const themeToggle = document.getElementById('themeToggle');
+      const currentTheme = localStorage.getItem('theme') || 'light';
+      
+      document.body.setAttribute('data-theme', currentTheme);
+      if (currentTheme === 'dark') {
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+      
+      themeToggle.addEventListener('click', function() {
+        const currentTheme = document.body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        document.body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        themeToggle.innerHTML = newTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      });
+      
+      // Mobile Navigation
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('navLinks');
+      hamburger.addEventListener('click', function() {
+        navLinks.classList.toggle('active');
+      });
+      
+      // Language Toggle
+      const languageToggle = document.getElementById('languageToggle');
+      const languageDropdown = document.getElementById('languageDropdown');
+      const languageItems = document.querySelectorAll('#languageDropdown li');
+      
+      languageToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        languageDropdown.classList.toggle('hidden');
+      });
+      
+      document.addEventListener('click', function(e) {
+        if (!languageToggle.contains(e.target)) {
+          languageDropdown.classList.add('hidden');
+        }
+      });
+      
+      languageItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const lang = this.getAttribute('data-lang');
+          changeLanguage(lang);
+        });
+      });
+      
+      // Initialize language
+      const savedLanguage = localStorage.getItem('language') || 'en';
+      changeLanguage(savedLanguage);
+
+      // Report Upload Functionality
+      const uploadBox = document.getElementById('uploadBox');
+      const reportInput = document.getElementById('reportInput');
+      const uploadStatus = document.getElementById('uploadStatus');
+      const analyzeBtn = document.getElementById('analyzeBtn');
+      const loadingIndicator = document.getElementById('loadingIndicator');
+      const summarySection = document.getElementById('summarySection');
+      const simplifiedOutput = document.getElementById('simplifiedOutput');
+      
+      uploadBox.addEventListener('click', function() {
+        reportInput.click();
+      });
+      
+      reportInput.addEventListener('change', handleReportUpload);
+      
+      function handleReportUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const fileType = file.type;
+        uploadStatus.textContent = "Extracting text...";
+        analyzeBtn.style.display = 'none';
+        
+        if (fileType === "application/pdf") {
+          extractTextFromPDF(file);
+        } else if (fileType.startsWith("image/")) {
+          extractTextFromImage(file);
+        } else {
+          uploadStatus.textContent = "❌ Unsupported file type. Please upload a PDF or image.";
+        }
+      }
+      
+      async function extractTextFromPDF(file) {
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onload = async function () {
+          try {
+            const pdf = await pdfjsLib.getDocument({ data: reader.result }).promise;
+            let fullText = "";
+            
+            for (let i = 1; i <= pdf.numPages; i++) {
+              const page = await pdf.getPage(i);
+              const textContent = await page.getTextContent();
+              const pageText = textContent.items.map(item => item.str).join(" ");
+              fullText += pageText + "\n";
+            }
+            
+            uploadStatus.textContent = "✅ PDF text extracted!";
+            analyzeBtn.style.display = 'block';
+            window.extractedText = fullText;
+          } catch (err) {
+            console.error("PDF extraction failed:", err);
+            uploadStatus.textContent = "❌ Failed to extract text from PDF";
+          }
+        };
+      }
+      
+      function extractTextFromImage(file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+          Tesseract.recognize(reader.result, 'eng', {
+            logger: m => console.log(m)
+          }).then(({ data: { text } }) => {
+            uploadStatus.textContent = "✅ Image text extracted!";
+            analyzeBtn.style.display = 'block';
+            window.extractedText = text;
+          }).catch(err => {
+            console.error("OCR failed:", err);
+            uploadStatus.textContent = "❌ Failed to extract text from image";
+          });
+        };
+      }
+      
+      analyzeBtn.addEventListener('click', function() {
+        if (!reportInput.files || !reportInput.files[0]) {
+          alert('Please select a file first.');
+          return;
+        }
+        
+        loadingIndicator.style.display = 'block';
+        summarySection.style.display = 'none';
+        summarizeMedicalReport(window.extractedText);
+      });
+      
+      async function summarizeMedicalReport(text) {
+        const prompt = `
+You are a medical assistant. Summarize the following medical report in simple language for a non-medical person. 
+Explain any medical terms clearly. Also, have a seperate section at the bottom to highlight any abnormalities or values that are out of the normal range. also avoid using '*' in the output you provide
+
+Medical Report:
+${text}
+        `;
+        
+        try {
+          const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDAKGISKgiPGAPimp5ztq4d2dBNXRglJ6E", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [
+                    { text: prompt }
+                  ]
+                }
+              ]
+            })
+          });
+          
+          const data = await response.json();
+          const reply = data.candidates?.[0]?.content?.parts?.map(part => part.text).join("") || "No summary returned.";
+          
+          simplifiedOutput.textContent = reply || "No summary returned.";
+          loadingIndicator.style.display = 'none';
+          summarySection.style.display = 'block';
+          summarySection.scrollIntoView({ behavior: 'smooth' });
+          
+        } catch (err) {
+          console.error("Error calling Gemini:", err);
+          loadingIndicator.style.display = 'none';
+          alert("Failed to summarize the medical report.");
+        }
+      }
+    });
+  </script>
+  </script>
+</body>
+</html>
