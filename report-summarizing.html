@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -871,9 +872,17 @@
       
       async function summarizeMedicalReport(text) {
         const prompt = `
-You are a medical assistant. Summarize the following medical report in simple language for a non-medical person. 
-Explain any medical terms clearly. Also, have a seperate section at the bottom to highlight any abnormalities or values that are out of the normal range. also avoid using '*' in the output you provide
+You are a medical assistant. Summarize the following medical report in short, simple language for a non-medical person.
 
+Keep the summary crisp, under 100 words if possible.
+
+Explain important medical terms clearly but briefly.
+
+Highlight major concerns or abnormal values separately in a "Key Findings" section at the bottom.
+
+Avoid using '*' symbols or overly technical language.
+
+Focus on clarity, brevity, and readability. 
 Medical Report:
 ${text}
         `;
