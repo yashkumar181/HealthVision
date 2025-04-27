@@ -619,26 +619,24 @@
   <!-- Date and Time Picker -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   
-  <script>
-    // Configuration from your provided JS
-    const CONFIG = {
-      TWILIO: {
-        ACCOUNT_SID: "AC59e3f06e7364281a9ce1147aaa1cbd63",
-        AUTH_TOKEN: "8b2b6e5d1950e127d2964b795d6f0f58",
-        PHONE_NUMBER: "+14326662579"
-      },
-      CHECK_INTERVAL_MINUTES: 5
-    };
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-    // Helper functions from your provided JS
+  <script>
+    // Configuration
+    const CONFIG = {
+      GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxATOgoyvliKTzTIlk6oFl6FWf5ORYlBJGu5JhLiArhNCR_61IHZ1J2Jg8ot3WPV4fD_g/exec", // Replace with your deployed web app URL
+      CHECK_INTERVAL_MINUTES: 1
+    };
+  
+    // Helper functions
     function formatPhoneNumber(phone) {
       return phone.startsWith('+') ? phone : `+${phone}`;
     }
-
+  
     function isValidPhone(phone) {
       return /^\+?[1-9]\d{9,14}$/.test(phone);
     }
-
+  
     function parseISTTime(timeString) {
       const now = new Date();
       const [hours, minutes] = timeString.split(':').map(Number);
@@ -649,11 +647,11 @@
       
       return scheduledTime;
     }
-
+  
     document.addEventListener('DOMContentLoaded', function() {
       // Set current year in footer
       document.getElementById('year').textContent = new Date().getFullYear();
-
+  
       // Theme Toggle
       const themeToggle = document.getElementById('themeToggle');
       const currentTheme = localStorage.getItem('theme') || 'light';
@@ -673,7 +671,7 @@
         
         themeToggle.innerHTML = newTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
       });
-
+  
       // Mobile Navigation
       const hamburger = document.getElementById('hamburger');
       const navLinks = document.getElementById('navLinks');
@@ -705,7 +703,7 @@
           languageDropdown.classList.remove('show');
         });
       });
-
+  
       // Time Picker
       flatpickr("#time", {
         enableTime: true,
@@ -733,82 +731,66 @@
       const successMessage = document.getElementById('successMessage');
       
       medicationForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        // Show loading state
-        loadingIndicator.style.display = 'block';
-        successMessage.style.display = 'none';
-        
-        // Get form values
-        const formData = {
-          patientName: document.getElementById('patientName').value,
-          medicine: document.getElementById('medicine').value,
-          time: document.getElementById('time').value,
-          phoneNumber: document.getElementById('phoneNumber').value,
-          familyContact: document.getElementById('familyContact').value,
-          email: document.getElementById('email').value,
-          repeatType: document.getElementById('repeatType').value,
-          repeatCount: document.getElementById('repeatCount').value || 1
-        };
-        
-        // Validate phone numbers
-        if (!isValidPhone(formData.phoneNumber)) {
-          alert('Please enter a valid patient phone number');
-          loadingIndicator.style.display = 'none';
-          return;
-        }
-        
-        if (!isValidPhone(formData.familyContact)) {
-          alert('Please enter a valid family contact number');
-          loadingIndicator.style.display = 'none';
-          return;
-        }
-        
-        try {
-          // Format phone numbers
-          formData.phoneNumber = formatPhoneNumber(formData.phoneNumber);
-          formData.familyContact = formatPhoneNumber(formData.familyContact);
-          
-          // Calculate scheduled time
-          const scheduledTime = parseISTTime(formData.time);
-          
-          // In a real implementation, you would send this data to your backend
-          console.log('Form data to be sent:', formData);
-          
-          // Simulate API call
-          await new Promise(resolve => setTimeout(resolve, 1500));
-          
-          // Show success message
-          loadingIndicator.style.display = 'none';
-          successMessage.style.display = 'block';
-          medicationForm.reset();
-          successMessage.scrollIntoView({ behavior: 'smooth' });
-          
-          // In a real implementation, you would call your saveReminder function here
-          // For example:
-          // const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
-          //   method: 'POST',
-          //   body: JSON.stringify(formData),
-          //   headers: {
-          //     'Content-Type': 'application/json'
-          //   }
-          // });
-          // const result = await response.json();
-          // console.log(result);
-          
-        } catch (error) {
-          console.error('Error:', error);
-          loadingIndicator.style.display = 'none';
-          alert('Failed to schedule reminder. Please try again.');
-        }
-      });
+  e.preventDefault();
+
+  loadingIndicator.style.display = 'block';
+  successMessage.style.display = 'none';
+
+  const formData = {
+    patientName: document.getElementById('patientName').value.trim(),
+    medicine: document.getElementById('medicine').value.trim(),
+    time: document.getElementById('time').value.trim(),
+    phoneNumber: formatPhoneNumber(document.getElementById('phoneNumber').value.trim()),
+    familyContact: formatPhoneNumber(document.getElementById('familyContact').value.trim()),
+    email: document.getElementById('email').value.trim(),
+    repeatType: document.getElementById('repeatType').value,
+    repeatCount: document.getElementById('repeatCount').value || 1
+  };
+
+  // Validate phone numbers
+  if (!isValidPhone(formData.phoneNumber)) {
+    alert('Please enter a valid patient phone number');
+    loadingIndicator.style.display = 'none';
+    return;
+  }
+  if (!isValidPhone(formData.familyContact)) {
+    alert('Please enter a valid family contact number');
+    loadingIndicator.style.display = 'none';
+    return;
+  }
+
+  try {
+    await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors', // keep no-cors
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    });
+
+    // Do NOT try to read response.json() or response.text() here because no-cors blocks it
+
+    // Assume success if no network error
+    loadingIndicator.style.display = 'none';
+    successMessage.style.display = 'block';
+    medicationForm.reset();
+    successMessage.scrollIntoView({ behavior: 'smooth' });
+
+  } catch (error) {
+    console.error('Fetch Error:', error);
+    loadingIndicator.style.display = 'none';
+    alert('Failed to schedule reminder. Please try again.');
+  }
+});
+
       
       // Load saved language preference
       const savedLanguage = localStorage.getItem('language') || 'en';
       changeLanguage(savedLanguage);
     });
-
-    // Language dictionary and change function (same as before)
+  
+    // Language dictionary
     const translations = {
       'en': {
         'Home': 'Home',
@@ -833,6 +815,9 @@
         'Scheduling your reminder...': 'Scheduling your reminder...',
         'Reminder Scheduled Successfully!': 'Reminder Scheduled Successfully!',
         'You will receive notifications for your medication.': 'You will receive notifications for your medication.',
+        'Please enter a valid patient phone number': 'Please enter a valid patient phone number',
+        'Please enter a valid family contact number': 'Please enter a valid family contact number',
+        'Failed to schedule reminder. Please try again.': 'Failed to schedule reminder. Please try again.',
         'Quick Links': 'Quick Links',
         'Symptom Checker': 'Symptom Checker',
         'Image Diagnosis': 'Image Diagnosis',
@@ -867,6 +852,9 @@
         'Scheduling your reminder...': 'आपका अनुस्मारक शेड्यूल किया जा रहा है...',
         'Reminder Scheduled Successfully!': 'अनुस्मारक सफलतापूर्वक शेड्यूल किया गया!',
         'You will receive notifications for your medication.': 'आपको अपनी दवा के लिए सूचनाएं प्राप्त होंगी।',
+        'Please enter a valid patient phone number': 'कृपया एक वैध रोगी फोन नंबर दर्ज करें',
+        'Please enter a valid family contact number': 'कृपया एक वैध परिवार संपर्क नंबर दर्ज करें',
+        'Failed to schedule reminder. Please try again.': 'अनुस्मारक शेड्यूल करने में विफल। कृपया पुनः प्रयास करें।',
         'Quick Links': 'त्वरित लिंक',
         'Symptom Checker': 'लक्षण जांचकर्ता',
         'Image Diagnosis': 'छवि निदान',
@@ -879,7 +867,7 @@
         'All rights reserved': 'सर्वाधिकार सुरक्षित'
       }
     };
-
+  
     // Function to change language
     function changeLanguage(lang) {
       // Update elements with data-translate attribute
