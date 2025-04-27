@@ -40,6 +40,8 @@ From symptom checking to appointment booking, and medical image diagnosis to fin
 
 ---
 
+
+```markdown
 ## 📂 Project Structure
 ```bash
 .
