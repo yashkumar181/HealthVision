@@ -1251,7 +1251,339 @@ body[data-theme="dark"] .team-vision {
           </ul>
         </div>
   <script>
-    
+    // translations.js
+    const translations = {
+      en: {
+        // English translations (original content)
+        "HealthVision - AI-Powered Healthcare Companion": "HealthVision - AI-Powered Healthcare Companion",
+        "Healthcare Assistant on Your Fingertips": "Healthcare Assistant on Your Fingertips",
+        "HealthVision combines advanced artificial intelligence with medical expertise to provide personalized health insights and connect you with the right care.": 
+          "HealthVision combines advanced artificial intelligence with medical expertise to provide personalized health insights and connect you with the right care.",
+        "Explore Features": "Explore Features",
+        "Talk to a Doctor": "Talk to a Doctor",
+        "About HealthVision": "About HealthVision",
+        "HealthVision is a revolutionary healthcare platform that leverages cutting-edge AI technology to make medical diagnosis and healthcare access easier than ever before.": 
+          "HealthVision is a revolutionary healthcare platform that leverages cutting-edge AI technology to make medical diagnosis and healthcare access easier than ever before.",
+        "Our mission is to democratize healthcare by providing accurate, accessible, and affordable health insights to everyone, regardless of location or economic status.": 
+          "Our mission is to democratize healthcare by providing accurate, accessible, and affordable health insights to everyone, regardless of location or economic status.",
+        "With a team of medical professionals and AI experts, we've created a platform that helps you understand your symptoms, analyze medical images, and connect with healthcare providers when needed.": 
+          "With a team of medical professionals and AI experts, we've created a platform that helps you understand your symptoms, analyze medical images, and connect with healthcare providers when needed.",
+        "Discover Our Features": "Discover Our Features",
+        "Our Features": "Our Features",
+        "Comprehensive healthcare solutions powered by artificial intelligence": "Comprehensive healthcare solutions.",
+        "Symptom Checker": "Symptom Checker",
+        "Describe what you're feeling and get AI-powered insights about potential conditions.": 
+          "Describe what you're feeling and get insights about your potential conditions.",
+        "Image Diagnosis": "Image Diagnosis",
+        "Upload photos of skin conditions, injuries, or medical scans for preliminary analysis.": 
+          "Upload photos of skin conditions for preliminary analysis.",
+        "Hospital Finder": "Hospital Finder",
+        "Locate nearby healthcare facilities based on your symptoms and current location.": 
+          "Locate nearby healthcare facilities based on your current location.",
+        "Appointment Booking": "Get Reminder for your Appointments",
+        "Schedule consultations with doctors and specialists directly through our platform.": 
+          "Get Scheduled Reminder for your Appointment through our platform.",
+        "Report Summarizer": "Report Summarizer",
+        "Get simplified explanations of complex medical reports and lab results.": 
+          "Get simplified explanations of complex medical reports and lab results.",
+        "Doctor Consultations": "Medicine Reminder",
+        "Connect with licensed physicians via chat, voice, or video call.": 
+          "Get Scheduled Reminders To Take Your Medicine.",
+        "How HealthVision Works": "How HealthVision Works",
+        "Three simple steps to better health understanding": "Three simple steps to better health understanding",
+        "Describe Your Symptoms": "Describe Your Symptoms",
+        "Enter your symptoms or upload images of medical concerns. Our AI will analyze the information.": 
+          "Enter your symptoms or upload images of medical concerns. We will analyze the information.",
+        "Receive Insights": "Receive Insights",
+        "Get potential condition matches with probability scores and recommended next steps.": 
+          "Get potential condition matches and recommendations for further Analysis.",
+        "Take Action": "Take Action",
+        "Book appointments, connect with doctors, or access additional resources as needed.": 
+          "Connect with Concerned doctors and Specialist.",
+        "Ready to Take Control of Your Health?": "Ready to Take Control of Your Health?",
+        "Join thousands of users who are making informed healthcare decisions with HealthVision.": 
+          "Join thousands of users who are making informed healthcare decisions with HealthVision.",
+        "Sign Up for Free": "Sign Up for Free",
+        "Learn More": "Learn More",
+        "HealthVision": "HealthVision",
+        "Empowering individuals with AI-driven healthcare insights and connections to medical professionals worldwide.": 
+          "Empowering individuals with healthcare insights and connections to medical professionals worldwide.",
+        "Quick Links": "Quick Links",
+        "Home": "Home",
+        "Features": "Features",
+        "How It Works": "How It Works",
+        "About Us": "About Us",
+        "Contact Us": "Contact Us",
+        "contact@healthvision.com": "contact@healthvision.com",
+        "+1 (800) 123-4567": "+1 (800) 123-4567",
+        "123 Healthcare St, MedCity, USA": "123 Healthcare St, MedCity, USA",
+        "&copy; 2023 HealthVision. All rights reserved.": "&copy; 2023 HealthVision. All rights reserved.",
+        "English": "English",
+        "हिन्दी": "हिन्दी",
+        "Español": "Español",
+        "Français": "Français"
+      },
+      hi: {
+        // Hindi translations with visual indicators
+        "HealthVision - AI-Powered Healthcare Companion": " हेल्थविजन - आपका स्वास्थ्य सहायक",
+        "Healthcare Assistant on Your Fingertips": "स्वास्थ्य सेवा सहायता आपकी उंगलियों पर",
+        "HealthVision combines advanced artificial intelligence with medical expertise to provide personalized health insights and connect you with the right care.": 
+          "हमारा ऐप आपकी बीमारी को समझेगा और डॉक्टर से बात कराएगा ",
+        "Explore Features": " वेबसाइट के काम देखें",
+        "Talk to a Doctor": "डॉक्टर बुलाएं",
+        "About HealthVision": "हमारे बारे में",
+        "HealthVision is a revolutionary healthcare platform that leverages cutting-edge AI technology to make medical diagnosis and healthcare access easier than ever before.": 
+          "यह ऐप आपके फोन पर डॉक्टर की तरह काम करता है ",
+        "Our mission is to democratize healthcare by providing accurate, accessible, and affordable health insights to everyone, regardless of location or economic status.": 
+          " हम चाहते हैं कि हर किसी को अच्छी दवा मिले ",
+        "With a team of medical professionals and AI experts, we've created a platform that helps you understand your symptoms, analyze medical images, and connect with healthcare providers when needed.": 
+          "डॉक्टर और कंप्यूटर ने मिलकर यह ऐप बनाया है जो आपकी मदद करेगा",
+        "Discover Our Features": "हमारी विशेषताएं",
+        "Our Features": "हमारी खास बातें",
+        "Comprehensive healthcare solutions powered by artificial intelligence": "आपके फोन में सभी सेवाएं ",
+        "Symptom Checker": "लक्षण पहचानें",
+        "Describe what you're feeling and get AI-powered insights about potential conditions.": 
+          "बताएं आपको क्या हुआ है, हमारे वेबसाइट के माध्यम से अपनी बीमारी जानें",
+        "Image Diagnosis": "तस्वीर से इलाज",
+        "Upload photos of skin conditions, injuries, or medical scans for preliminary analysis.": 
+          "इनफ़ेक्शन की फोटो भेजें, जानें क्या हुआ है",
+        "Hospital Finder": "पास के अस्पताल ढूंढें",
+        "Locate nearby healthcare facilities based on your symptoms and current location.": 
+          "आपके पास के अच्छे डॉक्टर एवं अस्पताल देखें",
+        "Appointment Booking": "डॉक्टर से मिलने के लिए रिमाइंडर प्राप्त करें",
+        "Schedule consultations with doctors and specialists directly through our platform.": 
+          "डॉक्टर से समय पर मिलें",
+        "Report Summarizer": "टेस्ट रिपोर्ट समझें",
+        "Get simplified explanations of complex medical reports and lab results.": 
+          " कठिन रिपोर्ट को आसान भाषा में समझें",
+        "Doctor Consultations": "दवा लेने के लिए रिमाइंडर प्राप्त करें",
+        "Connect with licensed physicians via chat, voice, or video call.": 
+          "दवा समय पर ले",
+        "How HealthVision Works": " वेबसाइट कैसे इस्तेमाल करे",
+        "Three simple steps to better health understanding": "स्वास्थ्य की बेहतर समझ के लिए तीन सरल कदम",
+        "Describe Your Symptoms": "बताएं आपको क्या हुआ",
+        "Enter your symptoms or upload images of medical concerns. Our AI will analyze the information.": 
+          "लिखें या फोटो भेजें कि क्या दिक्कत है",
+        "Receive Insights": "जानकारी मिलेगी",
+        "Get potential condition matches with probability scores and recommended next steps.": 
+          "ऐप बताएगा क्या हो सकता है और क्या करें",
+        "Take Action": "डॉक्टर से बात करें",
+        "Book appointments, connect with doctors, or access additional resources as needed.": 
+          " डॉक्टर को दिखाएं ",
+        "Ready to Take Control of Your Health?": "अपनी सेहत का ध्यान रखने के लिए तैयार?",
+        "Join thousands of users who are making informed healthcare decisions with HealthVision.": 
+          "हजारों लोग इस ऐप से अपना इलाज करवा रहे हैं",
+        "Sign Up for Free": "मुफ्त में जुड़ें",
+        "Learn More": "और जानें",
+        "HealthVision": "हेल्थविजन",
+        "Empowering individuals with AI-driven healthcare insights and connections to medical professionals worldwide.": 
+          "दुनिया भर में लोगों को बेहतर इलाज देने का ऐप",
+        "Quick Links": "त्वरित लिंक",
+        "Home": "मुख पृष्ठ",
+        "Features": "विशेषताएं",
+        "How It Works": "कार्य प्रणाली",
+        "About Us": "हमारे बारे में",
+        "English": "अंग्रेज़ी",
+        "हिन्दी": "हिन्दी",
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Theme Toggle
+      const themeToggle = document.getElementById('themeToggle');
+      const currentTheme = localStorage.getItem('theme') || 'light';
+      
+      document.body.setAttribute('data-theme', currentTheme);
+      
+      if (currentTheme === 'dark') {
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+      
+      themeToggle.addEventListener('click', function() {
+        const currentTheme = document.body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        document.body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        themeToggle.innerHTML = newTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      });
+
+      // Language Switching Functionality
+      const languageToggle = document.getElementById('languageToggle');
+      const languageDropdown = document.getElementById('languageDropdown');
+      
+      // Set default language
+      let currentLanguage = localStorage.getItem('language') || 'en';
+      
+      // Apply translations
+      function applyTranslations(lang) {
+        // Get all elements with data-translate attribute
+        const elementsToTranslate = document.querySelectorAll('[data-translate]');
+        
+        elementsToTranslate.forEach(element => {
+          const key = element.getAttribute('data-translate');
+          if (translations[lang] && translations[lang][key]) {
+            element.textContent = translations[lang][key];
+          }
+        });
+        
+        // Update HTML lang attribute
+        document.documentElement.lang = lang;
+        
+        // Add Hindi-specific UI adjustments
+        if (lang === 'hi') {
+          document.body.classList.add('hindi-ui');
+        } else {
+          document.body.classList.remove('hindi-ui');
+        }
+      }
+      
+      // Initialize translations
+      applyTranslations(currentLanguage);
+      
+      // Toggle dropdown
+      languageToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        languageDropdown.classList.toggle('hidden');
+      });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', () => {
+        languageDropdown.classList.add('hidden');
+      });
+      
+      // Handle language selection
+      languageDropdown.addEventListener('click', (e) => {
+        if (e.target.tagName === 'LI') {
+          const lang = e.target.getAttribute('data-lang');
+          currentLanguage = lang;
+          localStorage.setItem('language', lang);
+          applyTranslations(lang);
+          languageDropdown.classList.add('hidden');
+        }
+      });
+
+      // Mobile Navigation
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('navLinks');
+      
+      hamburger.addEventListener('click', function() {
+        navLinks.classList.toggle('active');
+        hamburger.classList.toggle('active');
+      });
+      
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          const targetId = this.getAttribute('href');
+          if (targetId === '#') return;
+          
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 80,
+              behavior: 'smooth'
+            });
+            
+            // Close mobile menu if open
+            if (navLinks.classList.contains('active')) {
+              navLinks.classList.remove('active');
+              hamburger.classList.remove('active');
+            }
+          }
+        });
+      });
+      
+      // Animate feature cards when they come into view
+      const featureCards = document.querySelectorAll('.feature-card');
+      const steps = document.querySelectorAll('.step');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      featureCards.forEach(card => {
+        observer.observe(card);
+      });
+      
+      steps.forEach(step => {
+        observer.observe(step);
+        step.addEventListener('mouseenter', () => {
+          step.classList.add('animated');
+        });
+      });
+      
+      // Animate steps on scroll
+      window.addEventListener('scroll', function() {
+        steps.forEach(step => {
+          const stepPosition = step.getBoundingClientRect().top;
+          const screenPosition = window.innerHeight / 1.3;
+          
+          if (stepPosition < screenPosition) {
+            step.classList.add('animated');
+          }
+        });
+      });
+      
+      // Initialize steps animation if already in view
+      steps.forEach(step => {
+        const stepPosition = step.getBoundingClientRect().top;
+        const screenPosition = window.innerHeight;
+        
+        if (stepPosition < screenPosition) {
+          step.classList.add('animated');
+        }
+// Vision Cards Slider with Auto-Slide and Navigation
+// Add this to your existing script
+const visionCards = document.querySelectorAll('.vision-card');
+const dots = document.querySelectorAll('.vision-dots .dot');
+const prevBtn = document.querySelector('.prev-btn');
+const nextBtn = document.querySelector('.next-btn');
+let currentCard = 0;
+
+function showCard(index) {
+  visionCards.forEach((card, i) => {
+    card.classList.toggle('active', i === index);
+  });
+  
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === index);
+  });
+  
+  currentCard = index;
+}
+
+function nextCard() {
+  const nextIndex = (currentCard + 1) % visionCards.length;
+  showCard(nextIndex);
+}
+
+function prevCard() {
+  const prevIndex = (currentCard - 1 + visionCards.length) % visionCards.length;
+  showCard(prevIndex);
+}
+
+// Navigation buttons
+nextBtn.addEventListener('click', nextCard);
+prevBtn.addEventListener('click', prevCard);
+
+// Dot navigation
+dots.forEach((dot, index) => {
+  dot.addEventListener('click', () => showCard(index));
+});
+
+// Auto-rotate every 5 seconds
+setInterval(nextCard, 3000);
+      });
+    });
   </script>
 </body>
 </html>
