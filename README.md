@@ -89,17 +89,18 @@ From symptom checking to appointment booking, and medical image diagnosis to fin
 ---
 
 ## 🖼️ Screenshots
-> (📸 Add your project screenshots here for better presentation)
 
-| Page | Description |
-| :--- | :--- |
-| ![Landing Page](#) | Homepage introducing HealthVision |
-| ![Symptom Checker](#) | Analyze and diagnose symptoms |
-| ![Appointment Reminder](#) | Book and manage appointments |
-| ![Medication Reminder](#) | Call/SMS medication reminders |
-| ![Email Reminder](#) | Email notifications for appointments |
-| ![Image Diagnosis](#) | Upload and analyze medical images |
-| ![Hospital Finder](#) | Locate nearby hospitals |
+| Page | Screenshot | Description |
+| :--- | :--- | :--- |
+| Home Page | ![Landing Page](assets/home.jpg) | Homepage introducing HealthVision |
+| Features Page | ![Landing Page](assets\features-1.jpg) | Features Page 1 |
+| Features Page | ![Landing Page](assets\features-2.jpg) | Features Page 2 |
+| Symptom Checker | ![Symptom Checker](assets\symptom-checker.jpg) | Analyze and diagnose symptoms |
+| Appointment Reminder | ![Appointment Reminder](assets\appointment-reminder.jpg) | Book and manage appointments |
+| Medication Reminder (Call/SMS) | ![Medication Reminder](assets\medication-reminder.jpg) | Call/SMS medication reminders via Twilio |
+| Email Reminder | ![Report Summarizer](assets\report-summarizer.jpg) | Analyze your Medical Report |
+| Image Diagnosis | ![Image Diagnosis](assets\image-diagnosis.jpg) | Upload and analyze medical images |
+| Hospital Finder | ![Hospital Finder](assets\find-hospitals.jpg) | Locate nearby hospitals with map support |
 
 ---
 
