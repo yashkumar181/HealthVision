@@ -1,7 +1,7 @@
 
-# 🏥 HealthVision - AI-Powered Healthcare Companion
+# 🏥 HealthVision - AI-Powered Healthcare Assistant
 
-> **Team Members:**  
+> **Team (RootForce) Members:**  
 > 👨‍💻 Yash Kumar  
 > 👨‍💻 Mohammad Ubaid  
 > 👨‍💻 Utkarsh Raj  
