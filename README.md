@@ -50,8 +50,8 @@ From symptom checking to appointment booking, and medical image diagnosis to fin
 ├── image-diagnosis.html        # Image diagnosis tool
 ├── report-summarizing.html     # Report summarizer page
 ├── nearby-hospitals.html       # Nearby hospital finder
-└── assets/                     # Screenshots, logos, other images
-
+└── assets/                     # (External assets loaded via CDN)
+```
 
 ---
 
