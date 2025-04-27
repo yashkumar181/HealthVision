@@ -41,7 +41,7 @@ From symptom checking to appointment booking, and medical image diagnosis to fin
 ---
 
 ## 📂 Project Structure
-\`\`\`bash
+```bash
 .
 ├── index.html                 # Home page
 ├── symptom-checker.html        # Symptom checker page
@@ -50,8 +50,8 @@ From symptom checking to appointment booking, and medical image diagnosis to fin
 ├── image-diagnosis.html        # Image diagnosis tool
 ├── report-summarizing.html     # Report summarizer page
 ├── nearby-hospitals.html       # Nearby hospital finder
-└── assets/                     # (External assets loaded via CDN)
-\`\`\`
+└── assets/                     # Screenshots, logos, other images
+
 
 ---
 
@@ -93,14 +93,14 @@ From symptom checking to appointment booking, and medical image diagnosis to fin
 | Page | Screenshot | Description |
 | :--- | :--- | :--- |
 | Home Page | ![Landing Page](assets/home.jpg) | Homepage introducing HealthVision |
-| Features Page | ![Landing Page](assets\features-1.jpg) | Features Page 1 |
-| Features Page | ![Landing Page](assets\features-2.jpg) | Features Page 2 |
-| Symptom Checker | ![Symptom Checker](assets\symptom-checker.jpg) | Analyze and diagnose symptoms |
-| Appointment Reminder | ![Appointment Reminder](assets\appointment-reminder.jpg) | Book and manage appointments |
-| Medication Reminder (Call/SMS) | ![Medication Reminder](assets\medication-reminder.jpg) | Call/SMS medication reminders via Twilio |
-| Email Reminder | ![Report Summarizer](assets\report-summarizer.jpg) | Analyze your Medical Report |
-| Image Diagnosis | ![Image Diagnosis](assets\image-diagnosis.jpg) | Upload and analyze medical images |
-| Hospital Finder | ![Hospital Finder](assets\find-hospitals.jpg) | Locate nearby hospitals with map support |
+| Features Page | ![Landing Page](assets/features-1.jpg) | Features Page 1 |
+| Features Page | ![Landing Page](assets/features-2.jpg) | Features Page 2 |
+| Symptom Checker | ![Symptom Checker](assets/symptom-checker.jpg) | Analyze and diagnose symptoms |
+| Appointment Reminder | ![Appointment Reminder](assets/appointment-reminder.jpg) | Book and manage appointments |
+| Medication Reminder (Call/SMS) | ![Medication Reminder](assets/medication-reminder.jpg) | Call/SMS medication reminders via Twilio |
+| Email Reminder | ![Report Summarizer](assets/report-summarizer.jpg) | Analyze your Medical Report |
+| Image Diagnosis | ![Image Diagnosis](assets/image-diagnosis.jpg) | Upload and analyze medical images |
+| Hospital Finder | ![Hospital Finder](assets/find-hospitals.jpg) | Locate nearby hospitals with map support |
 
 ---
 
