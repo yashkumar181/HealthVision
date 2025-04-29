@@ -29,7 +29,7 @@ From symptom checking to appointment booking, and medical image diagnosis to fin
 ## ✨ Features
 - 🩺 **Symptom Checker** — Analyze your symptoms and get possible health conditions.
 - 📅 **Appointment Booking** — Set doctor appointment reminders with notification options.
-- 💊 **Medication Consultancy** — Set up medication alerts to manage prescriptions.
+- 💊 **Medication Reminder** — Set up medication alerts to manage prescriptions.
 - 📞 **Medication Reminder Calls** — Automated voice call reminders at scheduled times via Twilio.
 - 📩 **SMS Notifications** — Send SMS alerts to registered family members via Twilio.
 - ✉️ **Email Reminders** — Send appointment confirmation and hospital suggestions to users via EmailJS.
@@ -46,7 +46,7 @@ From symptom checking to appointment booking, and medical image diagnosis to fin
 ├── index.html                 # Home page
 ├── symptom-checker.html        # Symptom checker page
 ├── appointment-booking.html    # Appointment booking page
-├── consultancy.html            # Medication consultancy page
+├── medication-reminder.html            # Medication reminder page
 ├── image-diagnosis.html        # Image diagnosis tool
 ├── report-summarizing.html     # Report summarizer page
 ├── nearby-hospitals.html       # Nearby hospital finder
